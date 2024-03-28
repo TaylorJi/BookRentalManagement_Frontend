@@ -32,6 +32,16 @@ const BookList: React.FC = () => {
         .then(data => setCustomers(data))
         .catch(error => setError(error.message));
     }, []);
+    const handleDelete = (id: string) => {
+      // Delete book logic here
+      console.log('Delete book with id:', id);
+  };
+
+  const handleUpdate = (id: string) => {
+      // Update book logic here
+      console.log('Update book with id:', id);
+  };
+
   
     if (error) {
       return <div>Error: {error}</div>;
@@ -56,6 +66,11 @@ const BookList: React.FC = () => {
                             <td>{book.genre.genre}</td>
                             <td>{book.rental_duration}</td>
                             <td>{book.is_available ? 'Yes' : 'No'}</td>
+                            <td>
+                                <button onClick={() => handleUpdate(book._id)}>Update</button>
+                                <button onClick={() => handleDelete(book._id)}>Delete</button>
+                            </td>
+
                         </tr>
                     ))}
                 </tbody>

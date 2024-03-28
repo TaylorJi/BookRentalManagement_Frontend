@@ -58,68 +58,7 @@ const CustomerList: React.FC = () => {
                 </tbody>
             </table>
         </div>
-        
-    //   <ul>
-    //     {customers.map(customer => (
-    //       <li key={customer._id}>{customer.name}</li>
-    //     ))}
-    //   </ul>
     );
   }
   
   export default CustomerList;
-
-// function CustomerList() {
-//     const [customers, setCustomers] = useState<Customer[]>([]);
-//     const [loading, setLoading] = useState(true);
-
-//     const fetchCustomers = async () => {
-//         setLoading(true);
-//         try {
-//             const response = await fetch('/customers');
-//             const data: Customer[] = await response.json();
-//             setCustomers(data);
-//             setLoading(false);
-//         } catch (error) {
-//             console.error('Error fetching customers:', error);
-//             setLoading(false);
-//         }
-//     };
-
-//     useEffect(() => {
-//         fetchCustomers();
-//     }, []);
-
-//     if (loading) {
-//         return <div>Loading customers...</div>;
-//     }
-
-//     async function deleteCustomer(id: string) {
-//         try {
-//             const response = await fetch(`/customers/${id}`, {
-//                 method: 'DELETE',
-//             });
-//             const data = await response.json();
-//             console.log(data.message);
-//             fetchCustomers(); // Refresh the list after deletion
-//         } catch (error) {
-//             console.error('Error deleting customer:', error);
-//         }
-//     }
-
-//     return (
-//         <div>
-//             <h1>Customer List</h1>
-//             <ul>
-//                 {customers.map((customer) => (
-//                     <li key={customer._id}>
-//                         {customer.name} - {customer.contact}
-//                         <button onClick={() => deleteCustomer(customer._id)}>Delete</button>
-//                     </li>
-//                 ))}
-//             </ul>
-//         </div>
-//     );
-// }
-
-// export default CustomerList;

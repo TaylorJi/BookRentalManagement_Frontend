@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import CustomerPage from './customer/customerPage';
-import BookPage from './book/bookPage';
+import CustomerPage from './pages/customer/customerPage';
+import BookPage from './pages/book/bookPage';
 
 import './App.css';
 
