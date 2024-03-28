@@ -5,6 +5,7 @@ interface Customer {
     _id: string;
     name: string;
     contact: string;
+    address: string;
     note: string;
     late_fee: number;
 
@@ -33,11 +34,36 @@ const CustomerList: React.FC = () => {
     }
   
     return (
-      <ul>
-        {customers.map(customer => (
-          <li key={customer._id}>{customer.name}</li>
-        ))}
-      </ul>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Address</th>
+                        <th>Note</th>
+                        <th>Late Fee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {customers.map(customer => (
+                        <tr key={customer._id}>
+                            <td>{customer.name}</td>
+                            <td>{customer.contact}</td>
+                            <td>{customer.address}</td>
+                            <td>{customer.note}</td>
+                            <td>{customer.late_fee}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+        
+    //   <ul>
+    //     {customers.map(customer => (
+    //       <li key={customer._id}>{customer.name}</li>
+    //     ))}
+    //   </ul>
     );
   }
   

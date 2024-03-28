@@ -1,5 +1,5 @@
 import React from "react";
-import CustomerList from "../components/CustomerList/customerList";
+import CustomerList from "../components/customerList/customerList";
 
 function CustomerPage() {
     return (
