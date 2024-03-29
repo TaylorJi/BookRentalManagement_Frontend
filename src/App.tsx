@@ -15,6 +15,10 @@ function App() {
           {/* Add more links for other navigation items */}
         </nav>
 
+        <h1>
+          Welcom to Book Rental System
+        </h1>
+
 
         
         {/* Define routes for your application */}
