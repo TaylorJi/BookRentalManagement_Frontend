@@ -12,6 +12,32 @@ function CustomerPage() {
     const toggleAddBook = () => {
         setShowAddBook(!showAddBook);
     }
+
+    const handledBookAdded = () => {
+        window.alert('Book added successfully');
+        if (showBookList) {
+            fetchBooks();
+            setShowBookList(false);
+        } else {
+            setShowBookList(true);
+        }
+        setShowAddBook(false);
+    }
+
+    const fetchBooks = () => {
+        fetch('/api/books')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setShowBookList(data);
+                setShowBookList(true);
+            })
+            .catch(error => console.error('Error fetching books:', error));
+    }
     return (
         <div>
             <h1>Book Management</h1>
@@ -22,7 +48,7 @@ function CustomerPage() {
             <button onClick={toggleAddBook}>
                 {showAddBook ? 'Hide book addition' : 'Add a book'}
             </button>
-            {showAddBook && <AddBook />}
+            {showAddBook && <AddBook onBookAdded={handledBookAdded} />}
         </div>
     );
 }

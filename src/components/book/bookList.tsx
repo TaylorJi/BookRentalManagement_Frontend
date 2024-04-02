@@ -270,6 +270,7 @@ const BookList: React.FC = () => {
       .then(response => response.json())
       .then(() => setBooks(books.filter(book => book._id !== id)))
       .catch(error => setError(error.message));
+      window.alert('Book deleted successfully');
   };
 
   if (error) {

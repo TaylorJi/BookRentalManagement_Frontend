@@ -5,9 +5,13 @@ interface Genre{
     genre: string;
   }
 
+interface AddBookProps {
+    onBookAdded: () => void; // Callback function to update the book list
+
+}
 
 
-const AddBook: React.FC = () => {
+const AddBook: React.FC<AddBookProps> = ({onBookAdded}) => {
     const [title, setTitle] = useState('');
     const [genre, setGenre] = useState('');
     const [genreList, setGenreList] = useState<Genre[]>([]);
@@ -33,6 +37,7 @@ const AddBook: React.FC = () => {
         .then(res => res.json())
         .then(data => {
             console.log('Book added:', data);
+            onBookAdded();
             setTitle('');
             setGenre('');
         })

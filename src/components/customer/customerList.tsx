@@ -170,6 +170,7 @@ const CustomerList: React.FC = () => {
             .then(response => response.json())
             .then(() => fetchCustomers()) // Update the list after deletion
             .catch(error => setError(error.message));
+        window.alert('Customer deleted successfully');
     };
 
     const handleEdit = (customer: Customer) => {
