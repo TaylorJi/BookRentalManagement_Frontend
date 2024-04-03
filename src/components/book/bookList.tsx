@@ -203,12 +203,20 @@ const BookList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [editBookId, setEditBookId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<Book | null>(null);
-
-  useEffect(() => {
+  
+  const fetchBooks = () => {
     fetch("/api/books")
       .then(response => response.json())
       .then(data => setBooks(data))
       .catch(error => setError(error.message));
+  }
+
+  useEffect(() => {
+    fetchBooks();
+    // fetch("/api/books")
+    //   .then(response => response.json())
+    //   .then(data => setBooks(data))
+    //   .catch(error => setError(error.message));
 
     fetch("/api/genres")
       .then(response => response.json())
@@ -224,6 +232,8 @@ const BookList: React.FC = () => {
   const handleUpdate = (id:string) => {
     console.log('Updating book with id:', id);
     if (editFormData) {
+      console.log('Updating book with id:', id);
+      console.log('editFormData:', editFormData);
       fetch(`/api/books/update/${id}`, {
         method: "PUT",
         headers: {
@@ -241,6 +251,10 @@ const BookList: React.FC = () => {
         setEditFormData(null);
       })
       .catch(error => setError(error.message));
+      window.alert('Book updated successfully');
+      fetchBooks();
+
+
     }
   };
   
@@ -358,7 +372,8 @@ const BookList: React.FC = () => {
                   ) : (
                     <>
                       <td>{book.title}</td>
-                      <td>{book.genre.genre}</td>
+                      <td>{book.genre ? book.genre.genre : 'N/A'}</td>
+                      {/* <td>{book.genre.genre}</td> */}
                       <td>{book.rental_duration}</td>
                       <td>{book.is_available ? "Yes" : "No"}</td>
                       <td>{book.rent_fee}</td>
