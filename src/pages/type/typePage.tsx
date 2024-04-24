@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import GenreList from "../../components/genre/typeList";
-import AddGenre from "../../components/genre/addType";
+import GenreList from "../../components/type/typeList";
+import AddGenre from "../../components/type/addType";
 
-function GenrePage() {
+function TypePage() {
 
     const [showGenreList, setShowGenreList] = useState(false);
     const [showAddGenre, setShowAddGenre] = useState(false);
@@ -56,4 +56,4 @@ function GenrePage() {
     );
 }
 
-export default GenrePage;
+export default TypePage;
