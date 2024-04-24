@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import GenreList from "../../components/genre/genreList";
-import AddGenre from "../../components/genre/addGenre";
+import GenreList from "../../components/genre/typeList";
+import AddGenre from "../../components/genre/addType";
 
 function GenrePage() {
 
@@ -26,7 +26,7 @@ function GenrePage() {
     }
 
     const fetchGenres = () => {
-        fetch('/api/genres')
+        fetch('/api/types')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -43,7 +43,7 @@ function GenrePage() {
 
     return (
         <div>
-            <h1>Genre Management</h1>
+            <h1>Type Management</h1>
             <button onClick={toggleGenreList}>
                 {showGenreList ? 'Hide Genre List' : 'Show Genre List'}
             </button>

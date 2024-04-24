@@ -8,7 +8,7 @@ const AddGenre: React.FC<AddGenreProps> = ({ onGenreAdded }) => {
     const [genre, setGenre] = useState('');
 
     const addGenre = () => {
-        fetch('/api/genres/addGenre', {
+        fetch('/api/types/addGenre', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,18 +17,17 @@ const AddGenre: React.FC<AddGenreProps> = ({ onGenreAdded }) => {
         })
         .then(res => res.json())
         .then(data => {
-            console.log('Genre added:', data);
+            console.log('Type added:', data);
             onGenreAdded();
             setGenre('');
         })
         .catch(error => console.error('Error:', error));
     };
 
-    return (
-        <div>
-            <h2>Add Genre</h2>
-            <input type="text" value={genre} onChange={e => setGenre(e.target.value)} placeholder="Genre" />
-            <button onClick={addGenre}>Add Genre</button>
+    return (      <div>
+            <h2>Add Type</h2>
+            <input type="text" value={genre} onChange={e => setGenre(e.target.value)} placeholder="Type" />
+            <button onClick={addGenre}>Add Type</button>
         </div>
     );
 };

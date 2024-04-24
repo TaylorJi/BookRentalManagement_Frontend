@@ -1,42 +1,48 @@
 import React, {useState, useEffect} from "react";
 
-interface Genre{
+
+interface Type {
     _id: string;
-    genre: string;
-  }
+    name: string;
+    fee: number;
+    duration: number
+}
+    ;
+const TypeList: React.FC = () => {
+    const [TypeList, setTypeList] = useState<Type[]>([]);
 
-const GenreList: React.FC = () => {
-    const [genreList, setGenreList] = useState<Genre[]>([]);
-
-    const fetchGenres = () => {
-        fetch('/api/genres')
+    const fetchTypes = () => {
+        fetch('/api/types')
         .then(res => res.json())
         .then(data => {
-            console.log('Genres:', data);
-            setGenreList(data);
+            console.log('Types:', data);
+            setTypeList(data);
         })
         .catch(error => console.error('Error:', error));
     }
 
 
     useEffect(() => {
-        fetchGenres();
+        fetchTypes();
     }, []);
 
     return (
         <div>
-            <h2>Genres</h2>
+            <h2>Types</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Genre</th>
-                        <th>actions</th>
+                        <th>name</th>
+                        <th>fee</th>
+                        <th>duration</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {genreList.map(g => (
+                    {TypeList.map(g => (
                         <tr key={g._id}>
-                            <td>{g.genre}</td>
+                            <td>{g.name}</td>
+                            <td>{g.fee}</td>
+                            <td>{g.duration}</td>
                             <td>
                                 <button>Edit</button>
                                 <button>Delete</button>
@@ -51,4 +57,4 @@ const GenreList: React.FC = () => {
     );
 }
 
-export default GenreList;
+export default TypeList;

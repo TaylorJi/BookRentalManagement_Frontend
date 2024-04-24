@@ -5,7 +5,6 @@ import AddBook from "../../components/book/addBook";
 function CustomerPage() {
     const [showBookList, setShowBookList] = useState(false);
     const [showAddBook, setShowAddBook] = useState(false);
-
     const toggleBookList = () => {
         setShowBookList(!showBookList);
     };

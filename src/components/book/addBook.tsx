@@ -1,9 +1,13 @@
 import React, {useEffect, useState} from "react";
 
-interface Genre{
+
+interface Type {
     _id: string;
-    genre: string;
-  }
+    name: string;
+    fee: number;
+    duration: number;
+}
+
 
 interface AddBookProps {
     onBookAdded: () => void; // Callback function to update the book list
@@ -13,15 +17,15 @@ interface AddBookProps {
 
 const AddBook: React.FC<AddBookProps> = ({onBookAdded}) => {
     const [title, setTitle] = useState('');
-    const [genre, setGenre] = useState('');
-    const [genreList, setGenreList] = useState<Genre[]>([]);
+    const [type, setType] = useState('');
+    const [typeList, setTypeList] = useState<Type[]>([]);
 
     useEffect(() => {
-        fetch('/api/genres')
+        fetch('/api/types')
         .then(res => res.json())
         .then(data => {
-            console.log('Genres:', data);
-            setGenreList(data);
+            console.log('Types:', data);
+            setTypeList(data);
         })
         .catch(error => console.error('Error:', error));
     }, []);
@@ -32,14 +36,14 @@ const AddBook: React.FC<AddBookProps> = ({onBookAdded}) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ title, genre }),
+            body: JSON.stringify({ title, book_type: type}),
         })
         .then(res => res.json())
         .then(data => {
             console.log('Book added:', data);
             onBookAdded();
             setTitle('');
-            setGenre('');
+            setType('');
         })
         .catch(error => console.error('Error:', error));
     };
@@ -48,10 +52,10 @@ const AddBook: React.FC<AddBookProps> = ({onBookAdded}) => {
         <div>
         <h2>Add Book</h2>
         <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" />
-        <select value={genre} onChange={e => setGenre(e.target.value.trim())}>
-            <option value="">Select Genre</option>
-            {genreList.map(g => (
-                <option key={g._id} value={g._id}>{g.genre}</option>
+        <select value={type} onChange={e => setType(e.target.value.trim())}>
+            <option value="">Select Type</option>
+            {typeList.map(g => (
+                <option key={g._id} value={g._id}>{g.name}</option>
             ))}
         </select>
         <button onClick={addBook}>Add Book</button>

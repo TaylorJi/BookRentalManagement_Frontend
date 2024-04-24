@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import CustomerPage from './pages/customer/customerPage';
 import BookPage from './pages/book/bookPage';
-import GenrePage from './pages/genre/genrePage';
+import GenrePage from './pages/type/typePage';
 
 import './App.css';
 
@@ -14,7 +14,7 @@ function App() {
           <Link to="/customers">Customers</Link>
           <Link to="/books">Books</Link>
           {/* <Link to="/rentals">Rentals</Link> */}
-          <Link to="/genres">Genres</Link>
+          <Link to="/types">Types</Link>
           {/* Add more links for other navigation items */}
         </nav>
 
@@ -28,7 +28,7 @@ function App() {
         <Routes>
           <Route path="/customers" element={<CustomerPage />} />
           <Route path="/books" element={<BookPage />} />
-          <Route path="/genres" element={< GenrePage/>} />
+          <Route path="/types" element={< GenrePage/>} />
           {/* Define other routes as needed */}
         </Routes>
       </div>
