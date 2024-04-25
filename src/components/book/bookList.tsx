@@ -121,6 +121,7 @@ const BookList: React.FC = () => {
       <table>
         <thead>
           <tr>
+            <th>ID</th>
             <th>Title</th>
             <th>Book Type</th>
             <th>Availability</th>
@@ -184,6 +185,7 @@ const BookList: React.FC = () => {
                 </>
               ) : (
                 <>
+                  <td>{book._id}</td>
                   <td>{book.title}</td>
                   <td>{book.book_type ? book.book_type.name : "N/A"}</td>
                   {/* <td>{book.genre.genre}</td> */}

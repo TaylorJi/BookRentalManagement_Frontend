@@ -1,15 +1,16 @@
 import React, {useState} from "react";
 import BookRentList from "../../components/bookRent/bookRentList";
-import AddBook from "../../components/book/addBook";
+// import AddBook from "../../components/book/addBook";
+import BookRentalForm from "./addBookRent";
 
 function RentPage() {
     const [showRentList, setShowBookList] = useState(false);
-    const [showAddBook, setShowAddBook] = useState(false);
+    const [showAddBookRent, setShowAddBookRent] = useState(false);
     const toggleBookList = () => {
         setShowBookList(!showRentList);
     };
-    const toggleAddBook = () => {
-        setShowAddBook(!showAddBook);
+    const toggleAddRent = () => {
+        setShowAddBookRent(!showAddBookRent);
     }
 
     const handledBookAdded = () => {
@@ -20,7 +21,7 @@ function RentPage() {
         } else {
             setShowBookList(true);
         }
-        setShowAddBook(false);
+        setShowAddBookRent(false);
     }
 
     const fetchRents = () => {
@@ -44,10 +45,10 @@ function RentPage() {
                 {showRentList ? 'Hide Book List' : 'Show Rent List'}
             </button>
             {showRentList && <BookRentList />}
-            <button onClick={toggleAddBook}>
-                {showAddBook ? 'Hide book addition' : 'Add a new rent'}
+            <button onClick={toggleAddRent}>
+                {showAddBookRent ? 'Hide book addition' : 'Add a new rent'}
             </button>
-            {showAddBook && <AddBook onBookAdded={handledBookAdded} />}
+            {showAddBookRent && <BookRentalForm onBookRentAdded={handledBookAdded} />}
         </div>
     );
 }
