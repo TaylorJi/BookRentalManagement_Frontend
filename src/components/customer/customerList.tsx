@@ -219,6 +219,7 @@ const CustomerList: React.FC = () => {
             <table>
                 <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Name</th>
                         <th>Contact</th>
                         <th>Address</th>
@@ -230,6 +231,7 @@ const CustomerList: React.FC = () => {
                 <tbody>
                     {customers.map(customer => (
                         <tr key={customer._id}>
+                            <td>{customer._id}</td>
                             <td>{customer.name}</td>
                             <td>{editCustomer && editCustomer._id === customer._id ? (
                                 <input
