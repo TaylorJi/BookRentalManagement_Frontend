@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 interface Genre {
   _id: string;
@@ -16,15 +17,15 @@ interface Book {
   _id: string;
   title: string;
   book_type: Type;
-  genre: Genre;
-
+  borrow_count: number;
   is_available: boolean;
-  rent_fee: number;
 }
 
 const BookList: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [type, setType] = useState<Type[]>([]);
+  const [bookAvailability, setBookAvailability] = useState<boolean>(false);
+  const [bookType, setBookType] = useState<string>("");
   const [typeList, setTypeList] = useState<Type[]>([]);
 
   const [error, setError] = useState<string | null>(null);
@@ -32,19 +33,35 @@ const BookList: React.FC = () => {
   const [editFormData, setEditFormData] = useState<Book | null>(null);
 
   const fetchBooks = () => {
-    fetch("/api/books")
-      .then((response) => response.json())
-      .then((data) => setBooks(data))
-      .catch((error) => setError(error.message));
+    axios.get("/api/books")
+      .then(response => {
+        setBooks(response.data);
+      })
+      .catch(error => {
+        setError(error.message);
+      });
+   
   };
+
+  const fetchTypes = () => {
+    axios.get("/api/types")
+      .then(response => {
+        setTypeList(response.data);
+      })
+      .catch(error => {
+        setError(error.message);
+      });
+  }
+  
 
   useEffect(() => {
     fetchBooks();
+    fetchTypes();
 
-    fetch("/api/types")
-      .then((response) => response.json())
-      .then((data) => setTypeList(data))
-      .catch((error) => setError(error.message));
+    // fetch("/api/types")
+    //   .then((response) => response.json())
+    //   .then((data) => setTypeList(data))
+    //   .catch((error) => setError(error.message));
   }, []);
 
   const handleEditClick = (book: Book) => {
@@ -52,54 +69,52 @@ const BookList: React.FC = () => {
     setEditFormData(book);
   };
 
+  const handleBookTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedType = typeList.find(
+      (type) => type._id === e.target.value
+    );
+    setEditFormData({
+      ...editFormData,
+      book_type: selectedType || editFormData?.book_type,
+    } as Book);
+  }
+
+  const handleBookAvailabilityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isAvailable = e.target.checked;
+    console.log("isAvailable:", isAvailable);
+    if (editFormData){
+      setEditFormData({
+        ...editFormData,
+        is_available: isAvailable,
+      });
+    }
+
+  }
+
   const handleUpdate = (id: string) => {
-    console.log("Updating book with id:", id);
     if (editFormData) {
       console.log("Updating book with id:", id);
-      console.log("editFormData:", editFormData);
-      fetch(`/api/books/update/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editFormData),
-      })
-        .then((response) => response.json())
-        .then((updatedBook) => {
-          const updatedBooks = books.map((book) =>
+      console.log("editFormData.book_type:", editFormData.book_type);
+      console.log("editFormData.is_available:", editFormData.is_available);
+      axios.put(`/api/books/update/${id}`, editFormData)
+        .then(response => {
+          const updatedBook = response.data;
+          console.log("updatedBook:", updatedBook.book._id);
+          const updatedBooks = books.map(book =>
             book._id === id ? updatedBook : book
           );
           setBooks(updatedBooks);
           setEditBookId(null);
           setEditFormData(null);
+          fetchBooks();
         })
-        .catch((error) => setError(error.message));
-      window.alert("Book updated successfully");
-      fetchBooks();
+        .catch(error => {
+          console.error("Failed to update the book:", error);
+          setError(error.message);
+        });
     }
-  };
+};
 
-  const handleEditFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const fieldName = e.target.name;
-    let fieldValue: string | number | boolean = e.target.value;
-
-    if (e.target instanceof HTMLInputElement && e.target.type === "checkbox") {
-      fieldValue = e.target.checked;
-    }
-
-    // Ensure genre is always initialized in editFormData
-    const updatedFormData = {
-      ...editFormData,
-      [fieldName]:
-        fieldName === "book_type"
-          ? { _id: fieldValue as string, book_type: fieldValue as string } // Assuming fieldValue is always a string here
-          : fieldValue,
-    };
-
-    setEditFormData(updatedFormData as Book);
-  };
 
 
   const handleDelete = (id: string) => {
@@ -125,35 +140,30 @@ const BookList: React.FC = () => {
             <th>Title</th>
             <th>Book Type</th>
             <th>Availability</th>
+            <th>Borrow Count</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {books.map((book) => (
-            <tr key={book._id}>
+          {books.map((book, index) => (
+            <tr key={book._id || index}>
               {editBookId === book._id ? (
                 <>
+                <td>
+                  <div>
+                    {book._id}
+                  </div>
+                </td>
                   <td>
-                    <input
-                      type="text"
-                      name="title"
-                      defaultValue={editFormData?.title}
-                      onChange={handleEditFormChange}
-                    />
+                    <div>
+                      {book.title}
+                    </div>
                   </td>
                   <td>
                     <select
                       name="book_type"
                       value={editFormData?.book_type._id}
-                      onChange={(e) => {
-                        const selectedType = typeList.find(
-                          (g) => g._id === e.target.value
-                        );
-                        setEditFormData({
-                          ...editFormData,
-                          book_type: selectedType || editFormData?.book_type,
-                        } as Book);
-                      }}
+                      onChange = {handleBookTypeChange}
                     >
                       {typeList.map((book_type) => (
                         <option key={book_type._id} value={book_type._id}>
@@ -167,9 +177,15 @@ const BookList: React.FC = () => {
                       type="checkbox"
                       name="is_available"
                       checked={editFormData?.is_available ? true : false}
-                      onChange={handleEditFormChange}
+                      onChange={handleBookAvailabilityChange}
                     />
                   </td>
+                  <td>
+                    <div>
+                      {book.borrow_count}
+                    </div>
+                  </td>
+                  
 
                   <td>
                     <button
@@ -188,8 +204,8 @@ const BookList: React.FC = () => {
                   <td>{book._id}</td>
                   <td>{book.title}</td>
                   <td>{book.book_type ? book.book_type.name : "N/A"}</td>
-                  {/* <td>{book.genre.genre}</td> */}
                   <td>{book.is_available ? "Yes" : "No"}</td>
+                  <td>{book.borrow_count}</td>
 
                   <td>
                     <button type="button" onClick={() => handleEditClick(book)}>
