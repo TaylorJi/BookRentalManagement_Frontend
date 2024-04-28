@@ -8,10 +8,19 @@ interface Customer {
   name: string;
 }
 
+interface Book_Type {
+  _id: string;
+  name: string;
+  fee: number;
+  duration: number;
+}
+
 interface Book {
   _id: string;
+  book_type: string;
   title: string;
   is_available: boolean;
+  borrow_count: number;
 }
 
 interface AddBookRentProps {
@@ -27,10 +36,31 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
   const [bookIdSearch, setBookIdSearch] = useState<string>("");
   const [bookTitleSearch, setBookTitleSearch] = useState<string>("");
   const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
+  const [bookTypes, setBookTypes] = useState<{ [key: string]: Book_Type }>({});
+  const [customDurations, setCustomDurations] = useState<{
+    [bookId: string]: { duration: number; fee: number };
+  }>({});
 
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const newCustomDurations: {
+      [bookId: string]: { duration: number; fee: number };
+    } = {};
+    selectedBooks.forEach((bookId) => {
+      const book = books.find((b) => b._id === bookId);
+      if (book) {
+        const bookType = bookTypes[book.book_type];
+        if (bookType) {
+          newCustomDurations[bookId] = {
+            duration: bookType.duration, // default duration
+            fee: bookType.fee, // default fee
+          };
+        }
+      }
+    });
+    setCustomDurations(newCustomDurations);
+
     // Fetch customers and books on component mount
     const fetchCustomers = async () => {
       try {
@@ -54,14 +84,58 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
       try {
         const response = await axios.get("/api/books"); // assuming endpoint that only fetches available books
         setBooks(response.data);
+        response.data.forEach((book: Book) => {
+          fetchBookTypeById(book.book_type);
+        });
       } catch (err) {
         setError("Failed to fetch books");
       }
     };
 
     // fetchCustomers();
-    // fetchBooks();
-  }, []);
+  }, [selectedBooks, books, bookTypes]);
+
+  const handleDurationChange = (bookId: string, multiplier: number) => {
+    const book = books.find((book) => book._id === bookId);
+    if (book && book.book_type) {
+      // Ensure that book and book_type are defined
+      const bookType = bookTypes[book.book_type];
+      if (bookType) {
+        const newDuration = bookType.duration * multiplier;
+        const newFee = bookType.fee * multiplier; // Calculate new fee based on the multiplier
+        setCustomDurations((prev) => ({
+          ...prev,
+          [bookId]: {
+            duration: newDuration,
+            fee: newFee,
+          },
+        }));
+      }
+    }
+  };
+
+  const fetchBookTypeById = async (id: string) => {
+    if (!bookTypes[id]) {
+      // Check if the book type is already fetched to avoid unnecessary API calls
+      try {
+        const response = await axios.get(`/api/types/id?id=${id}`);
+        setBookTypes((prev) => ({ ...prev, [id]: response.data }));
+      } catch (err) {
+        console.error("Failed to fetch book type", err);
+      }
+    }
+  };
+
+  const getBookTypeById = async (id: string) => {
+    try {
+      const response = await axios.get(`/api/types/id?id=${id}`);
+      console.log(response.data);
+      setBookTypes(response.data);
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
@@ -84,15 +158,18 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
     setCustomerSearch(e.target.value);
   };
 
+
+
   const handleSearchByBookTitle = async () => {
     try {
       console.log(searchInput);
       const response = await axios.get(
         `/api/books/searchTitle?title=${bookTitleSearch}`
       );
-      console.log(response.data);
-      console.log(response.data.books);
       setBooks((prevBooks) => [...prevBooks, ...response.data.books]);
+      response.data.books.forEach((book: Book) => {
+        fetchBookTypeById(book.book_type);
+      });
     } catch (err) {
       setError("Failed to search by book");
     }
@@ -147,6 +224,13 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
       });
       alert("Books rented successfully");
       console.log(response.data);
+        setSelectedCustomerId("");
+        setSelectedBooks([]);
+        setBooks([]);
+        setCustomers([]);
+        setBookTitleSearch("");
+        setBookIdSearch("");
+        setCustomerSearch("");
     } catch (err) {
       setError("Failed to process book rental");
       console.error(err);
@@ -230,13 +314,75 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
                     onChange={handleBookSelection}
                   />
                 )}
-                {book._id.slice(-6)} {book.title} (Available: {book.is_available ? 'Yes' : 'No'})
+                {book._id.slice(-6)} {book.title} (Available:{" "}
+                {book.is_available ? "Yes" : "No"}) -{" "}
+                {bookTypes[book.book_type]?.name} - Fee: $
+                {bookTypes[book.book_type]?.fee} - Duration:{" "}
+                {bookTypes[book.book_type]?.duration} days
               </label>
             </div>
           ))}
         </div>
-
         <div>
+          <label>Selected Books:</label>
+          <ul>
+            {selectedBooks.map((bookId) => {
+              const book = books.find((b) => b._id === bookId);
+              const customDuration = customDurations[bookId];
+              return (
+                book && (
+                  <li key={bookId}>
+                    {book._id.slice(-6)} {book.title} -{" "}
+                    {bookTypes[book.book_type]?.name}
+                    <select
+                      value={
+                        customDuration?.duration ||
+                        bookTypes[book.book_type]?.duration
+                      }
+                      onChange={(e) =>
+                        handleDurationChange(bookId, parseInt(e.target.value))
+                      }
+                    >
+                      {[1, 2, 3].map((multiplier) => (
+                        <option key={multiplier} value={multiplier}>
+                          {bookTypes[book.book_type]?.duration * multiplier}{" "}
+                          days
+                        </option>
+                      ))}
+                    </select>
+                    - Fee: $
+                    {customDuration?.fee.toFixed(2) ||
+                      bookTypes[book.book_type]?.fee.toFixed(2)}
+                  </li>
+                )
+              );
+            })}
+          </ul>
+        </div>
+
+        {/* <div>
+          <label>Selected Books:</label>
+
+          <ul>
+            {selectedBooks.map((bookId) => {
+              const book = books.find((b) => b._id === bookId);
+              if (book) {
+                return (
+                    <li key={bookId}>
+                      {book?._id.slice(-6)} {book?.title} - {bookTypes[book.book_type]?.name} - Fee: ${bookTypes[book.book_type]?.fee} - Duration: {bookTypes[book.book_type]?.duration} days
+                  
+                    </li>
+                  );
+              }
+                
+
+       
+              
+            })}
+          </ul>
+        </div> */}
+
+        {/* <div>
           <label>Selected Books:</label>
 
           <ul>
@@ -249,7 +395,7 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
               );
             })}
           </ul>
-        </div>
+        </div> */}
 
         <div>
           <button type="submit">Rent Selected Books</button>

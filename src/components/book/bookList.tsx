@@ -35,6 +35,7 @@ const BookList: React.FC = () => {
   const fetchBooks = () => {
     axios.get("/api/books")
       .then(response => {
+        console.log("response.data:", response.data);
         setBooks(response.data);
       })
       .catch(error => {
@@ -100,13 +101,15 @@ const BookList: React.FC = () => {
         .then(response => {
           const updatedBook = response.data;
           console.log("updatedBook:", updatedBook.book._id);
+          console.log(updatedBook.book._id === id);
           const updatedBooks = books.map(book =>
             book._id === id ? updatedBook : book
           );
           setBooks(updatedBooks);
+          fetchBooks();
           setEditBookId(null);
           setEditFormData(null);
-          fetchBooks();
+
         })
         .catch(error => {
           console.error("Failed to update the book:", error);
@@ -151,7 +154,7 @@ const BookList: React.FC = () => {
                 <>
                 <td>
                   <div>
-                    {book._id}
+                    {book._id.slice(-6)}
                   </div>
                 </td>
                   <td>
@@ -201,7 +204,13 @@ const BookList: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <td>{book._id}</td>
+                  <td>
+                    <div>
+                    {book._id && book._id.length >= 6 ? book._id.slice(-6) : 'Invalid ID'}
+
+                    </div>
+                    
+                    </td>
                   <td>{book.title}</td>
                   <td>{book.book_type ? book.book_type.name : "N/A"}</td>
                   <td>{book.is_available ? "Yes" : "No"}</td>
