@@ -40,6 +40,7 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
   const [customDurations, setCustomDurations] = useState<{
     [bookId: string]: { duration: number; fee: number };
   }>({});
+  const [totalRent, setTotalRent] = useState<number>(0);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -47,6 +48,13 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
     const newCustomDurations: {
       [bookId: string]: { duration: number; fee: number };
     } = {};
+
+    const newTotalRent = Object.values(customDurations).reduce(
+      (acc, custom) => acc + (custom ? custom.fee : 0),
+      0
+    );
+    setTotalRent(newTotalRent);
+
     selectedBooks.forEach((bookId) => {
       const book = books.find((b) => b._id === bookId);
       if (book) {
@@ -59,54 +67,26 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
         }
       }
     });
-    setCustomDurations(newCustomDurations);
-
-    // Fetch customers and books on component mount
-    const fetchCustomers = async () => {
-      try {
-        const response = await axios.get("/api/customers");
-        setCustomers(response.data);
-      } catch (err) {
-        setError("Failed to fetch customers");
-      }
-    };
-
-    const handleBookSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const bookId = e.target.value;
-      setSelectedBooks((prev) =>
-        e.target.checked
-          ? [...prev, bookId]
-          : prev.filter((id) => id !== bookId)
-      );
-    };
-
-    const fetchBooks = async () => {
-      try {
-        const response = await axios.get("/api/books"); // assuming endpoint that only fetches available books
-        setBooks(response.data);
-        response.data.forEach((book: Book) => {
-          fetchBookTypeById(book.book_type);
-        });
-      } catch (err) {
-        setError("Failed to fetch books");
-      }
-    };
+    // setCustomDurations(newCustomDurations);
+    // setTotalRent(newTotalRent);
 
     // fetchCustomers();
-  }, [selectedBooks, books, bookTypes]);
+  }, [selectedBooks, customDurations, books, bookTypes]);
 
   const handleDurationChange = (bookId: string, multiplier: number) => {
+    console.log("bookId:", bookId);
+    console.log("multiplier:", multiplier);
     const book = books.find((book) => book._id === bookId);
     if (book && book.book_type) {
-      // Ensure that book and book_type are defined
       const bookType = bookTypes[book.book_type];
       if (bookType) {
-        const newDuration = bookType.duration * multiplier;
-        const newFee = bookType.fee * multiplier; // Calculate new fee based on the multiplier
-        setCustomDurations((prev) => ({
-          ...prev,
+        // const newDuration = bookType.duration * multiplier;
+        console.log(bookType.fee * multiplier);
+        const newFee = bookType.fee * multiplier; // Recalculate fee based on new duration
+        setCustomDurations((prevCustomDurations) => ({
+          ...prevCustomDurations,
           [bookId]: {
-            duration: newDuration,
+            duration: bookType.duration * multiplier,
             fee: newFee,
           },
         }));
@@ -158,8 +138,6 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
     setCustomerSearch(e.target.value);
   };
 
-
-
   const handleSearchByBookTitle = async () => {
     try {
       console.log(searchInput);
@@ -203,11 +181,36 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
     setSelectedCustomerId(e.target.value);
   };
 
+
   const handleBookSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
     const bookId = e.target.value;
-    setSelectedBooks((prev) =>
-      e.target.checked ? [...prev, bookId] : prev.filter((id) => id !== bookId)
-    );
+    const newSelectedBooks = e.target.checked
+      ? [...selectedBooks, bookId]
+      : selectedBooks.filter((id) => id !== bookId);
+  
+    setSelectedBooks(newSelectedBooks);
+  
+    // Update custom durations for the newly selected books
+    const newCustomDurations = { ...customDurations };
+  
+    // If a book is being selected, add its default fee and duration
+    if (e.target.checked) {
+      const book = books.find((b) => b._id === bookId);
+      if (book) {
+        const bookType = bookTypes[book.book_type];
+        if (bookType) {
+          newCustomDurations[bookId] = {
+            duration: bookType.duration, // default duration
+            fee: bookType.fee, // default fee
+          };
+        }
+      }
+    } else {
+      // If a book is being deselected, remove it from custom durations
+      delete newCustomDurations[bookId];
+    }
+  
+    setCustomDurations(newCustomDurations);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -217,20 +220,35 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
       return;
     }
 
+    const booksToRent = selectedBooks.map((bookId) => {
+      const book = books.find((b) => b._id === bookId);
+      if (book){
+        const custom = customDurations[bookId];
+        return {
+          book_id: bookId,
+          duration: custom ? custom.duration : bookTypes[book.book_type]?.duration,
+          fee: custom ? custom.fee : bookTypes[book.book_type]?.fee,
+        };
+      }
+    });
+
     try {
       const response = await axios.post("/api/bookRents", {
         customer_ID: selectedCustomerId,
-        books: selectedBooks,
+        books: booksToRent,
+        
       });
       alert("Books rented successfully");
       console.log(response.data);
-        setSelectedCustomerId("");
-        setSelectedBooks([]);
-        setBooks([]);
-        setCustomers([]);
-        setBookTitleSearch("");
-        setBookIdSearch("");
-        setCustomerSearch("");
+      setSelectedCustomerId("");
+      setSelectedBooks([]);
+      setBooks([]);
+      setCustomers([]);
+      setBookTitleSearch("");
+      setBookIdSearch("");
+      setCustomerSearch("");
+      setCustomDurations({});
+      setTotalRent(0);
     } catch (err) {
       setError("Failed to process book rental");
       console.error(err);
@@ -300,12 +318,6 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
           {books.map((book) => (
             <div key={book._id}>
               <label>
-                {/* <input
-                  type="checkbox"
-                  value={book._id}
-                  checked={selectedBooks.includes(book._id)}
-                  onChange={handleBookSelection}
-                /> */}
                 {book.is_available && (
                   <input
                     type="checkbox"
@@ -328,7 +340,7 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
           <ul>
             {selectedBooks.map((bookId) => {
               const book = books.find((b) => b._id === bookId);
-              const customDuration = customDurations[bookId];
+              const custom = customDurations[bookId];
               return (
                 book && (
                   <li key={bookId}>
@@ -336,23 +348,34 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
                     {bookTypes[book.book_type]?.name}
                     <select
                       value={
-                        customDuration?.duration ||
-                        bookTypes[book.book_type]?.duration
+                        custom
+                          ? custom.duration
+                          : bookTypes[book.book_type]?.duration
                       }
                       onChange={(e) =>
-                        handleDurationChange(bookId, parseInt(e.target.value))
+                        handleDurationChange(
+                          bookId,
+                          parseInt(e.target.value) /
+                            bookTypes[book.book_type]?.duration
+                        )
                       }
                     >
                       {[1, 2, 3].map((multiplier) => (
-                        <option key={multiplier} value={multiplier}>
+                        <option
+                          key={multiplier}
+                          value={
+                            bookTypes[book.book_type]?.duration * multiplier
+                          }
+                        >
                           {bookTypes[book.book_type]?.duration * multiplier}{" "}
                           days
                         </option>
                       ))}
                     </select>
                     - Fee: $
-                    {customDuration?.fee.toFixed(2) ||
-                      bookTypes[book.book_type]?.fee.toFixed(2)}
+                    {custom
+                      ? custom.fee.toFixed(2)
+                      : bookTypes[book.book_type]?.fee.toFixed(2)}
                   </li>
                 )
               );
@@ -360,47 +383,16 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
           </ul>
         </div>
 
-        {/* <div>
-          <label>Selected Books:</label>
-
-          <ul>
-            {selectedBooks.map((bookId) => {
-              const book = books.find((b) => b._id === bookId);
-              if (book) {
-                return (
-                    <li key={bookId}>
-                      {book?._id.slice(-6)} {book?.title} - {bookTypes[book.book_type]?.name} - Fee: ${bookTypes[book.book_type]?.fee} - Duration: {bookTypes[book.book_type]?.duration} days
-                  
-                    </li>
-                  );
-              }
-                
-
-       
-              
-            })}
-          </ul>
-        </div> */}
-
-        {/* <div>
-          <label>Selected Books:</label>
-
-          <ul>
-            {selectedBooks.map((bookId) => {
-              const book = books.find((b) => b._id === bookId);
-              return (
-                <li key={bookId}>
-                  {book?._id.slice(-6)} {book?.title}
-                </li>
-              );
-            })}
-          </ul>
-        </div> */}
+        <div>
+          <label>Total Rent: </label>
+          <span>${totalRent.toFixed(2)}</span>
+        </div>
 
         <div>
           <button type="submit">Rent Selected Books</button>
         </div>
       </form>
+
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
