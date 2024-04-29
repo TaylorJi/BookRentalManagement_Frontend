@@ -1,57 +1,55 @@
-import React, {useState} from "react";
-import GenreList from "../../components/type/typeList";
-import AddGenre from "../../components/type/addType";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import TypeList from "../../components/type/typeList"; // Assuming TypeList is the correct component
+import AddType from "../../components/type/addType"; // Changed from AddGenre to AddType for consistency
 
 function TypePage() {
+    const [types, setTypes] = useState([]); // State to hold types data
+    const [showTypeList, setShowTypeList] = useState(false);
+    const [showAddType, setShowAddType] = useState(false);
 
-    const [showGenreList, setShowGenreList] = useState(false);
-    const [showAddGenre, setShowAddGenre] = useState(false);
+    // Toggle visibility of the type list
+    const toggleTypeList = () => {
+        setShowTypeList(!showTypeList);
+    };
 
-    const toggleGenreList = () => {
-        setShowGenreList(!showGenreList);
-    }
-    const toggleAddGenre = () => {
-        setShowAddGenre(!showAddGenre);
-    }
+    // Toggle visibility of the add type form
+    const toggleAddType = () => {
+        setShowAddType(!showAddType);
+    };
 
-    const handleGenreAdded = () => {
-        window.alert('Genre added successfully');
-        if (showGenreList) {
-            fetchGenres();
-            setShowGenreList(false);
-        } else {
-            setShowGenreList(true);
-        }
-        setShowAddGenre(false);
-    }
+    // Handle type addition
+    const handleTypeAdded = () => {
+        fetchTypes();
+        setShowAddType(false);
+    };
 
-    const fetchGenres = () => {
-        fetch('/api/types')
+    // Fetch types from the backend
+    const fetchTypes = () => {
+        axios.get("/api/types")
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+                setTypes(response.data);
+                setShowTypeList(true);
             })
-            .then(data => {
-                setShowGenreList(data);
-                setShowGenreList(true);
-            })
-            .catch(error => console.error('Error fetching genres:', error));
-    }
+            .catch(error => console.error('Error:', error));
+    };
 
+    // Optionally, fetch types when component mounts
+    useEffect(() => {
+        fetchTypes();
+    }, []);
 
     return (
         <div>
             <h1>Type Management</h1>
-            <button onClick={toggleGenreList}>
-                {showGenreList ? 'Hide Genre List' : 'Show Genre List'}
+            <button onClick={toggleTypeList}>
+                {showTypeList ? 'Hide Type List' : 'Show Type List'}
             </button>
-            {showGenreList && <GenreList />}
-            <button onClick={toggleAddGenre}>
-                {showAddGenre ? 'Hide Genre Addition' : 'Add a Genre'}
+            {showTypeList && <TypeList/>}
+            <button onClick={toggleAddType}>
+                {showAddType ? 'Hide Type Addition' : 'Add a Type'}
             </button>
-            {showAddGenre && <AddGenre onGenreAdded={handleGenreAdded} />}
+            {showAddType && <AddType onTypeAdded={handleTypeAdded} />}
         </div>
     );
 }

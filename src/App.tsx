@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import CustomerPage from './pages/customer/customerPage';
 import BookPage from './pages/book/bookPage';
-import TypePage from './components/type/typeList';
+import TypePage from './pages/type/typePage';
 import RentPage from './pages/bookRent/bookRentpage';
 
 import './App.css';

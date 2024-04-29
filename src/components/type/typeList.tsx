@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from "react";
+import axios from "axios";
+import { response } from "express";
 
 
 interface Type {
@@ -6,17 +8,19 @@ interface Type {
     name: string;
     fee: number;
     duration: number
-}
-    ;
+    late_fee: number
+};
+
+
 const TypeList: React.FC = () => {
     const [TypeList, setTypeList] = useState<Type[]>([]);
 
     const fetchTypes = () => {
-        fetch('/api/types')
-        .then(res => res.json())
-        .then(data => {
-            console.log('Types:', data);
-            setTypeList(data);
+        axios.get("/api/types")
+        .then(response => {
+            console.log("response.data:", response.data);
+            setTypeList(response.data);
+        
         })
         .catch(error => console.error('Error:', error));
     }
@@ -32,9 +36,10 @@ const TypeList: React.FC = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>name</th>
-                        <th>fee</th>
-                        <th>duration</th>
+                        <th>Name</th>
+                        <th>Fee</th>
+                        <th>Duration</th>
+                        <th>Late fee</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,6 +48,7 @@ const TypeList: React.FC = () => {
                             <td>{g.name}</td>
                             <td>{g.fee}</td>
                             <td>{g.duration}</td>
+                            <td>{g.late_fee}</td>
                             <td>
                                 <button>Edit</button>
                                 <button>Delete</button>

@@ -132,7 +132,8 @@
 
 
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
+import { response } from "express";
 // Define the customer type based on the expected structure of customer data
 interface Customer {
     _id: string;
@@ -154,15 +155,13 @@ const CustomerList: React.FC = () => {
     }, []);
 
     const fetchCustomers = () => {
-        fetch('/api/customers')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => setCustomers(data))
-            .catch(error => setError(error.message));
+        axios.get("/api/customers")
+        .then(response => {
+            console.log('Customers:', response.data);
+            setCustomers(response.data);
+        
+        })
+        .catch(error => console.error('Error:', error));
     };
 
     const handleDelete = (id: string) => {
