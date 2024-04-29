@@ -121,11 +121,16 @@ const BookList: React.FC = () => {
 
 
   const handleDelete = (id: string) => {
-    fetch(`/api/books/${id}`, { method: "DELETE" })
-      .then((response) => response.json())
-      .then(() => setBooks(books.filter((book) => book._id !== id)))
-      .catch((error) => setError(error.message));
-    window.alert("Book deleted successfully");
+    // change this code using axios
+    axios.delete(`/api/books/${id}`)
+      .then(response => {
+        console.log("response.data:", response.data);
+        window.alert("Book deleted successfully");
+        setBooks(books.filter(book => book._id !== id));
+      })
+      .catch(error => {
+        setError(error.message);
+      });
   };
 
   if (error) {

@@ -1,6 +1,8 @@
 import React, { useState} from "react";
+import axios from "axios";
 import CustomerList from "../../components/customer/customerList";
 import AddCustomer from "../../components/customer/addCustomer";
+import { set } from "mongoose";
 
 
 function CustomerPage() {
@@ -28,19 +30,13 @@ function CustomerPage() {
     };
 
     const fetchCustomers = () => {
-        // Fetch updated list of customers from the server
-        fetch('/api/customers')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setShowCustomerList(data); // Update the customer list
-                setShowCustomerList(true); // Show the customer list
-            })
-            .catch(error => console.error('Error fetching customers:', error));
+        axios.get('/api/customers')
+        .then((response) => {
+            setShowCustomerList(response.data);
+            setShowCustomerList(true);
+        })
+
+        .catch(error => console.error('Error fetching customers:', error));
     };
 
     return (

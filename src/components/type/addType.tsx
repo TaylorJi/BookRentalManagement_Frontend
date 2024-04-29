@@ -49,24 +49,6 @@ const AddGenre: React.FC<AddTypeProps> = ({ onTypeAdded }) => {
         }
     }
 
-
-    // const addGenre = () => {
-    //     fetch('/api/types/addGenre', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ genre }),
-    //     })
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         console.log('Type added:', data);
-    //         onGenreAdded();
-    //         setGenre('');
-    //     })
-    //     .catch(error => console.error('Error:', error));
-    // };
-
     return (      <div>
             <h2>Add Type</h2>
             <form onSubmit={handleSubmit}>

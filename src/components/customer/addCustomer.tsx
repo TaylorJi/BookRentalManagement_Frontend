@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 
 interface AddCustomerProps {
@@ -23,29 +24,41 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Your code to send the form data to the server and add the customer
-        // After successful addition, call the onCustomerAdded callback
-        // For example:
-        fetch("/api/customers", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
+
+        axios.post("/api/customers", formData)
+        .then(() => {
+            onCustomerAdded();
+            setFormData({
+                name: "",
+                contact: "",
+                address: "",
+                note: "",
+                late_fee: 0,
+            });
+        
         })
-            .then(response => response.json())
-            .then(() => {
-                // Call the callback to update the customer list
-                onCustomerAdded();
-                // Reset the form data
-                setFormData({
-                    name: "",
-                    contact: "",
-                    address: "",
-                    note: "",
-                    late_fee: 0,
-                });
-            })
+     
+        // // For example:
+        // fetch("/api/customers", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(formData),
+        // })
+        //     .then(response => response.json())
+        //     .then(() => {
+        //         // Call the callback to update the customer list
+        //         onCustomerAdded();
+        //         // Reset the form data
+        //         setFormData({
+        //             name: "",
+        //             contact: "",
+        //             address: "",
+        //             note: "",
+        //             late_fee: 0,
+        //         });
+        //     })
             .catch(error => console.error("Error adding customer:", error));
     };
 

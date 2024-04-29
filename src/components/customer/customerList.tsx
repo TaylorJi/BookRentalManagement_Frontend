@@ -165,11 +165,12 @@ const CustomerList: React.FC = () => {
     };
 
     const handleDelete = (id: string) => {
-        fetch(`/api/customers/${id}`, { method: "DELETE" })
-            .then(response => response.json())
-            .then(() => fetchCustomers()) // Update the list after deletion
-            .catch(error => setError(error.message));
-        window.alert('Customer deleted successfully');
+        axios.delete(`/api/customers/${id}`)
+        .then(response => {
+            console.log('Customer deleted successfully:', response.data);
+            window.alert('Customer deleted successfully');
+            fetchCustomers();
+        })
     };
 
     const handleEdit = (customer: Customer) => {
@@ -178,24 +179,27 @@ const CustomerList: React.FC = () => {
 
     const handleUpdate = () => {
         if (editCustomer) {
-            fetch(`/api/customers/update/${editCustomer._id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    contact: editCustomer.contact,
-                    address: editCustomer.address,
-                    note: editCustomer.note,
-                    late_fee: editCustomer.late_fee,
-                }),
+            axios.put(`/api/customers/update/${editCustomer._id}`, {
+                contact: editCustomer.contact,
+                address: editCustomer.address,
+                note: editCustomer.note,
+                late_fee: editCustomer.late_fee,
             })
-                .then(response => response.json())
-                .then(() => {
-                    fetchCustomers(); // Update the list after successful update
-                    setEditCustomer(null);
-                })
-                .catch(error => setError(error.message));
+            .then((response) => {
+                console.log(response.data);
+                window.alert('Customer updated successfully');
+                fetchCustomers(); // Update the list after successful update
+                setEditCustomer(null); // Reset the edit customer state
+            
+
+            })
+            .catch(error => {
+                // Handle error more effectively; Axios wraps the error response in error.response
+                const message = error.response ? 
+                    `Error: ${error.response.status} ${error.response.statusText}` : 
+                    error.message;
+                setError(message);
+            });
         }
     };
 
