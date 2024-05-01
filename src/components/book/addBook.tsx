@@ -19,6 +19,7 @@ const AddBook: React.FC<AddBookProps> = ({onBookAdded}) => {
     const [title, setTitle] = useState('');
     const [type, setType] = useState('');
     const [typeList, setTypeList] = useState<Type[]>([]);
+    const [price, setPrice] = useState(0);
 
     useEffect(() => {
         fetch('/api/types')
@@ -36,7 +37,7 @@ const AddBook: React.FC<AddBookProps> = ({onBookAdded}) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ title, book_type: type}),
+            body: JSON.stringify({ title, book_type: type, price: price}),
         })
         .then(res => res.json())
         .then(data => {
@@ -58,6 +59,7 @@ const AddBook: React.FC<AddBookProps> = ({onBookAdded}) => {
                 <option key={g._id} value={g._id}>{g.name}</option>
             ))}
         </select>
+        <input type="number" value={price} onChange={e => setPrice(parseFloat(e.target.value))} placeholder="Price" />
         <button onClick={addBook}>Add Book</button>
     </div>
     );

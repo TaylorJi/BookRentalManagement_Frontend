@@ -2,7 +2,6 @@ import React, { useState} from "react";
 import axios from "axios";
 import CustomerList from "../../components/customer/customerList";
 import AddCustomer from "../../components/customer/addCustomer";
-import { set } from "mongoose";
 
 
 function CustomerPage() {

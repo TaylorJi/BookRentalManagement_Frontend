@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { set } from "mongoose";
 
 interface Customer {
   _id: string;
@@ -31,7 +30,6 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState<string>("");
-  const [searchInput, setSearchInput] = useState<string>("");
   const [customerSearch, setCustomerSearch] = useState<string>("");
   const [bookIdSearch, setBookIdSearch] = useState<string>("");
   const [bookTitleSearch, setBookTitleSearch] = useState<string>("");
@@ -106,20 +104,6 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
     }
   };
 
-  const getBookTypeById = async (id: string) => {
-    try {
-      const response = await axios.get(`/api/types/id?id=${id}`);
-      console.log(response.data);
-      setBookTypes(response.data);
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  };
-
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(e.target.value);
-  };
 
   const handleSearchByBookIdChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -140,7 +124,7 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
 
   const handleSearchByBookTitle = async () => {
     try {
-      console.log(searchInput);
+      console.log(bookTitleSearch);
       const response = await axios.get(
         `/api/books/searchTitle?title=${bookTitleSearch}`
       );
@@ -155,12 +139,18 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
 
   const handleSearchByBookId = async () => {
     try {
+      console.log(bookIdSearch);
       const response = await axios.get(
-        `/api/books/searchId?id=${bookIdSearch}`
+        `/api/books/searchById?id=${bookIdSearch}`
       );
       setBooks((prevBooks) => [...prevBooks, ...response.data.books]);
+      response.data.books.forEach((book: Book) => {
+        console.log(book);
+        console.log(book.book_type)
+        fetchBookTypeById(book.book_type);
+      });
+  
 
-      // setBooks(response.data.books);
     } catch (err) {
       setError("Failed to search by book");
     }

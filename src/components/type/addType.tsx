@@ -6,7 +6,6 @@ interface AddTypeProps {
 }
 
 const AddGenre: React.FC<AddTypeProps> = ({ onTypeAdded }) => {
-    const [genre, setGenre] = useState('');
     const [type, setType] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
