@@ -45,6 +45,7 @@ const AddBook: React.FC<AddBookProps> = ({onBookAdded}) => {
             onBookAdded();
             setTitle('');
             setType('');
+            setPrice(0);
         })
         .catch(error => console.error('Error:', error));
     };

@@ -19,6 +19,7 @@ interface Book {
   book_type: Type;
   borrow_count: number;
   is_available: boolean;
+  price: number;
 }
 
 const BookList: React.FC = () => {
@@ -149,6 +150,7 @@ const BookList: React.FC = () => {
             <th>Book Type</th>
             <th>Availability</th>
             <th>Borrow Count</th>
+            <th>Price</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -220,6 +222,7 @@ const BookList: React.FC = () => {
                   <td>{book.book_type ? book.book_type.name : "N/A"}</td>
                   <td>{book.is_available ? "Yes" : "No"}</td>
                   <td>{book.borrow_count}</td>
+                  <td>{book.price}</td>
 
                   <td>
                     <button type="button" onClick={() => handleEditClick(book)}>
