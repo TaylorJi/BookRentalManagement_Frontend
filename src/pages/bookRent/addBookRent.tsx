@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import e from "express";
 
 interface Customer {
   _id: string;
@@ -133,7 +134,8 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
         fetchBookTypeById(book.book_type);
       });
     } catch (err) {
-      setError("Failed to search by book");
+      setError("The book title does not exist");
+      window.alert("The book title does not exist")
     }
   };
 
@@ -152,7 +154,8 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
   
 
     } catch (err) {
-      setError("Failed to search by book");
+      window.alert("Please check the book ID and try again");
+      setError("Please check the book ID and try again");
     }
   };
 

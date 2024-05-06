@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { response } from 'express';
 import React, { useState, useEffect } from 'react';
 
 interface Customer {
@@ -29,6 +31,8 @@ interface Rental {
 const RentalList: React.FC = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  
 
   const fetchRentals = () => {
     fetch('/api/bookRents')
