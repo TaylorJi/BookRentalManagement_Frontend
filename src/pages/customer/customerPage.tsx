@@ -14,18 +14,40 @@ function CustomerPage() {
     const handleClose = () => setOpen(false);
     const [showCustomerList, setShowCustomerList] = useState(false);
     const [showAddCustomer, setShowAddCustomer] = useState(false);
+    const [showCustomerListDialog, setShowCustomerListDialog] = useState(false);
+    const [showAddCustomerDialog, setShowAddCustomerDialog] = useState(false);
+
 
 
     const handleCustomerAdded = () => {
         window.alert('Customer added successfully');
         if (showCustomerList) {
             fetchCustomers(); // Fetch updated customer list after adding a customer
+            setShowCustomerListDialog(false); // Hide the customer list dialog
+            setShowAddCustomerDialog(false); // Hide the add customer dialog
             setShowCustomerList(false); // Hide the customer list
         } else {
             setShowCustomerList(true); // Show the customer list after adding a customer
         }
         setShowAddCustomer(false); // Hide the add customer form after successful addition
     };
+
+    const handleOpenCustomerList = () => {
+        setShowCustomerListDialog(true);
+    };
+
+    const handleCloseCustomerList = () => {
+        setShowCustomerListDialog(false);
+    };
+
+    const handleOpenAddCustomer = () => {
+        setShowAddCustomerDialog(true);
+    };
+
+    const handleCloseAddCustomer = () => {
+        setShowAddCustomerDialog(false);
+    };
+
 
     const fetchCustomers = () => {
         axios.get('/api/customers')
@@ -41,12 +63,12 @@ function CustomerPage() {
         <div>
             <h1>Customer Management</h1>
             <Button 
-            variant="contained" onClick={handleOpen}>
+            variant="contained" onClick={handleOpenCustomerList}>
                 Show Customer List
             </Button>
-            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
+            <Dialog open={showCustomerListDialog} onClose={handleCloseCustomerList} fullWidth maxWidth="lg">
                 <IconButton
-                    onClick={handleClose}
+                    onClick={handleCloseCustomerList}
                     sx={{ position: 'absolute', right: 8, top: 8 }}
                 >
                     <CloseIcon />
@@ -55,12 +77,12 @@ function CustomerPage() {
             </Dialog>
             <Button
             sx={{ backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }} 
-            variant="contained" onClick={handleOpen}>
+            variant="contained" onClick={handleOpenAddCustomer}>
                 Add a Customer
             </Button>
-            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
+            <Dialog open={showAddCustomerDialog} onClose={handleCloseAddCustomer} fullWidth maxWidth="lg">
                 <IconButton
-                    onClick={handleClose}
+                    onClick={handleCloseAddCustomer}
                     sx={{ position: 'absolute', right: 8, top: 8 }}
                 >
                     <CloseIcon />
