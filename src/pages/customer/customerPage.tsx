@@ -1,21 +1,20 @@
 import React, { useState} from "react";
 import axios from "axios";
+import { Button, Dialog, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 import CustomerList from "../../components/customer/customerList";
 import AddCustomer from "../../components/customer/addCustomer";
 
 
 function CustomerPage() {
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const [showCustomerList, setShowCustomerList] = useState(false);
     const [showAddCustomer, setShowAddCustomer] = useState(false);
 
-
-    const toggleCustomerList = () => {
-        setShowCustomerList(!showCustomerList);
-    };
-
-    const toggleAddCustomer = () => {
-        setShowAddCustomer(!showAddCustomer);
-    };
 
     const handleCustomerAdded = () => {
         window.alert('Customer added successfully');
@@ -41,10 +40,33 @@ function CustomerPage() {
     return (
         <div>
             <h1>Customer Management</h1>
-            <button onClick={toggleCustomerList}>{showCustomerList ? 'Hide Customer List' : 'Show Customer List'}</button>
-            {showCustomerList && <CustomerList />} {/* Pass customers prop to CustomerList */}
-            <button onClick={toggleAddCustomer}>{showAddCustomer ? 'Hide Customer Addition' : 'Add a Customer'}</button>
-            {showAddCustomer && <AddCustomer onCustomerAdded={handleCustomerAdded} />}
+            <Button 
+            variant="contained" onClick={handleOpen}>
+                Show Customer List
+            </Button>
+            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
+                <IconButton
+                    onClick={handleClose}
+                    sx={{ position: 'absolute', right: 8, top: 8 }}
+                >
+                    <CloseIcon />
+                </IconButton>
+                <CustomerList />
+            </Dialog>
+            <Button
+            sx={{ backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }} 
+            variant="contained" onClick={handleOpen}>
+                Add a Customer
+            </Button>
+            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
+                <IconButton
+                    onClick={handleClose}
+                    sx={{ position: 'absolute', right: 8, top: 8 }}
+                >
+                    <CloseIcon />
+                </IconButton>
+                <AddCustomer onCustomerAdded={handleCustomerAdded} />
+            </Dialog>
         </div>
     );
 }
