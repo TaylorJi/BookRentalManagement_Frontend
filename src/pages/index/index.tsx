@@ -22,7 +22,7 @@ function IndexPage() {
         <Button variant="contained" color="primary" component={RouterLink} to="/rentals" sx={{ m: 1 }}>
           Rent
         </Button>
-        <Button variant="contained" color="primary" component={RouterLink} to="/return" sx={{ m: 1 }}>
+        <Button variant="contained" color="primary" component={RouterLink} to="/returns" sx={{ m: 1 }}>
           Return
         </Button>
         <Button variant="contained" color="primary" component={RouterLink} to="/transactions" sx={{ m: 1 }}>

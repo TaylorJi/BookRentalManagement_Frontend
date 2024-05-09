@@ -20,6 +20,7 @@ import RentPage from "./pages/bookRent/bookRentpage";
 import IndexPage from "./pages/index";
 
 import "./App.css";
+import ReturnPage from "./pages/return/returnPage";
 
 function App() {
   return (
@@ -47,6 +48,9 @@ function App() {
           <Button color="inherit" component={RouterLink} to="/rentals">
             Rentals
           </Button>
+          <Button color="inherit" component={RouterLink} to="/returns">
+            Returns
+          </Button>
           {/* Add more navigation buttons as needed */}
         </Toolbar>
       </AppBar>
@@ -57,6 +61,7 @@ function App() {
         <Route path="/books" element={<BookPage />} />
         <Route path="/types" element={<TypePage />} />
         <Route path="/rentals" element={<RentPage />} />
+        <Route path="/returns" element={<ReturnPage />} />
         {/* Define other routes as needed */}
       </Routes>
     </Router>

@@ -8,12 +8,8 @@ import AddCustomer from "../../components/customer/addCustomer";
 
 
 function CustomerPage() {
-    const [open, setOpen] = useState(false);
 
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
     const [showCustomerList, setShowCustomerList] = useState(false);
-    const [showAddCustomer, setShowAddCustomer] = useState(false);
     const [showCustomerListDialog, setShowCustomerListDialog] = useState(false);
     const [showAddCustomerDialog, setShowAddCustomerDialog] = useState(false);
 
@@ -29,7 +25,6 @@ function CustomerPage() {
         } else {
             setShowCustomerList(true); // Show the customer list after adding a customer
         }
-        setShowAddCustomer(false); // Hide the add customer form after successful addition
     };
 
     const handleOpenCustomerList = () => {
