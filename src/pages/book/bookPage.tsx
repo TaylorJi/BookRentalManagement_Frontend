@@ -13,6 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import BookList from "../../components/book/bookList";
 import AddBook from "../../components/book/addBook";
+import SearchByTitle from "../../components/book/searchByTitle";
 
 function BookPage() {
   const [showBookList, setShowBookList] = useState(false);
@@ -50,6 +51,10 @@ function BookPage() {
 
   const handleOpenSearchByTitle = () => {
     setShowSearchByTitle(true);
+  }
+
+  const handleCloseSearchByTitle = () => {
+    setShowSearchByTitle(false);
   }
 
   const fetchBooks = () => {
@@ -115,23 +120,23 @@ function BookPage() {
             backgroundColor: "gray",
             "&:hover": { backgroundColor: "gray" },
           }}
-      variant="contained" onClick={handleOpenBookList}>
+      variant="contained" onClick={handleOpenSearchByTitle}>
         Search by book title
       </Button>
       <Dialog
         open={showSearchByTitle}
-        onClose={handleCloseBookList}
+        onClose={handleCloseSearchByTitle}
         fullWidth
         maxWidth="lg"
       >
         <IconButton
-          onClick={handleCloseBookList}
+          onClick={handleCloseSearchByTitle}
           sx={{ position: "absolute", right: 8, top: 8 }}
         >
           <CloseIcon />
         </IconButton>
         <DialogContent dividers={true} style={{ overflow: "auto" }}>
-          <BookList />
+          <SearchByTitle />
         </DialogContent>
       </Dialog>
     </div>
