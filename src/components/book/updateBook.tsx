@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface Book {
   _id: string;
   title: string;
-  genre: string; // Assuming genre is just a string for the demonstration
+  genre: string; 
   rental_duration: number;
   is_available: boolean;
 }
