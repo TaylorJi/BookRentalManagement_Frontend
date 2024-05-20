@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import e from "express";
 
 interface Customer {
   _id: string;
@@ -66,10 +65,6 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
         }
       }
     });
-    // setCustomDurations(newCustomDurations);
-    // setTotalRent(newTotalRent);
-
-    // fetchCustomers();
   }, [selectedBooks, customDurations, books, bookTypes]);
 
   const handleDurationChange = (bookId: string, multiplier: number) => {
@@ -127,7 +122,7 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
     try {
       console.log(bookTitleSearch);
       const response = await axios.get(
-        `/api/books/searchTitle?title=${bookTitleSearch}`
+        `/api/books/searchByTitle?title=${bookTitleSearch}`
       );
       setBooks((prevBooks) => [...prevBooks, ...response.data.books]);
       response.data.books.forEach((book: Book) => {
