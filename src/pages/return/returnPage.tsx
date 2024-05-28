@@ -239,7 +239,7 @@ function ReturnPage() {
                         checked={selectedBooks.includes(book._id)}
                         onChange={() => handleSelectBook(book._id)}
                       />
-                      {book.title}, {book._id.slice(-6)}
+                      {book.title}
                     </li>
                   ))}
                 </ul>

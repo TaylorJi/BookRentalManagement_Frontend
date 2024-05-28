@@ -10,6 +10,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
     const [formData, setFormData] = useState({
         name: "",
         contact: "",
+        email: "",
         address: "",
         note: "",
         late_fee: 0,
@@ -60,6 +61,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
                     setFormData({
                         name: "",
                         contact: "",
+                        email: "",
                         address: "",
                         note: "",
                         late_fee: 0,
@@ -95,6 +97,13 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
                         error={!!formErrors.contact}
                         helperText={formErrors.contact}
                         required
+                    />
+                    <TextField
+                        label="Email"
+                        variant="outlined"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
                     />
                     <TextField
                         label="Address"
