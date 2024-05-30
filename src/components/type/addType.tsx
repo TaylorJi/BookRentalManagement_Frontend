@@ -1,78 +1,114 @@
-import React, {useState, useEffect} from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { TextField, Button, Typography, Container, Box, Alert } from "@mui/material";
 
 interface AddTypeProps {
-    onTypeAdded: () => void;
+  onTypeAdded: () => void;
 }
 
 const AddGenre: React.FC<AddTypeProps> = ({ onTypeAdded }) => {
-    const [type, setType] = useState('');
-    const [error, setError] = useState<string | null>(null);
-    const [formData, setFormData] = useState({
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    fee: 0,
+    duration: 0,
+    late_fee: 0,
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      if (!formData.name) {
+        throw new Error("Name is required");
+      }
+      const response = await axios.post("/api/types", formData);
+      alert("Type added successfully");
+      console.log(response);
+      onTypeAdded();
+      setFormData({
         name: "",
         fee: 0,
         duration: 0,
         late_fee: 0,
-    });
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
+  };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            if (!formData.name) {
-                throw new Error('Name is required');
-            }
-            const response = axios.post('/api/types', formData);
-            alert("Type added successfully");
-            console.log(response);
-            onTypeAdded();
-            setFormData({
-                name: "",
-                fee: 0,
-                duration: 0,
-                late_fee: 0,
-            });
-        } catch (error) {
-            if (error instanceof Error) {
-                setError(error.message);
-            } else {
-                setError('An unknown error occurred');
-            }
-        }
-    }
-
-    return (      <div>
-            <h2>Add Type</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
-                    <input type="text" name="name" value={formData.name} onChange={handleInputChange} />
-                </label>
-                <label>
-                    Fee:
-                    <input type="number" name="fee" value={formData.fee} onChange={handleInputChange} />
-                </label>
-                <label>
-                    Duration:
-                    <input type="number" name="duration" value={formData.duration} onChange={handleInputChange} />
-                </label>
-                <label>
-                    Late Fee:
-                    <input type="number" name="late_fee" value={formData.late_fee} onChange={handleInputChange} />
-                </label>
-                <button type="submit">Add Type</button>
-            </form>
-            {/* <input type="text" value={type} onChange={e => setType(e.target.value)} placeholder="Type" />
-            <button onClick={addType}>Add Type</button> */}
-        </div>
-    );
+  return (
+    <Container maxWidth="sm">
+      <Typography variant="h4" gutterBottom>
+        Add Type
+      </Typography>
+      {error && <Alert severity="error">{error}</Alert>}
+      <form onSubmit={handleSubmit}>
+        <Box mb={2}>
+          <TextField
+            fullWidth
+            label="Name"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            variant="outlined"
+            required
+            
+          />
+        </Box>
+        <Box mb={2}>
+          <TextField
+            fullWidth
+            label="Fee"
+            name="fee"
+            type="number"
+            value={formData.fee}
+            onChange={handleInputChange}
+            variant="outlined"
+            required
+          />
+        </Box>
+        <Box mb={2}>
+          <TextField
+            fullWidth
+            label="Duration"
+            name="duration"
+            type="number"
+            value={formData.duration}
+            onChange={handleInputChange}
+            variant="outlined"
+            required
+          />
+        </Box>
+        <Box mb={2}>
+          <TextField
+            fullWidth
+            label="Late Fee"
+            name="late_fee"
+            type="number"
+            value={formData.late_fee}
+            onChange={handleInputChange}
+            variant="outlined"
+            required
+          />
+        </Box>
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Add Type
+        </Button>
+      </form>
+    </Container>
+  );
 };
 
 export default AddGenre;

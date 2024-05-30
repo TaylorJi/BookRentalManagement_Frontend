@@ -1,6 +1,6 @@
 import React, { useState} from "react";
 import axios from "axios";
-import { Button, Dialog, IconButton } from '@mui/material';
+import { Button, Dialog, IconButton, Box, Container, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import CustomerList from "../../components/customer/customerList";
@@ -55,8 +55,11 @@ function CustomerPage() {
     };
 
     return (
-        <div>
-            <h1>Customer Management</h1>
+        <Container maxWidth="md">
+            <Typography variant="h4" gutterBottom>
+                Customer Management
+            </Typography>
+            <Box display="flex" mt={2} gap={2}>
             <Button 
             variant="contained" onClick={handleOpenCustomerList}>
                 Show Customer List
@@ -84,7 +87,8 @@ function CustomerPage() {
                 </IconButton>
                 <AddCustomer onCustomerAdded={handleCustomerAdded} />
             </Dialog>
-        </div>
+            </Box>
+        </Container>
     );
 }
 

@@ -5,7 +5,9 @@ import {
   Dialog,
   IconButton,
   DialogContent,
-  DialogTitle,
+  Container,
+  Typography,
+  Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -66,8 +68,11 @@ function BookPage() {
   };
 
   return (
-    <div>
-      <h1>Book Management</h1>
+    <Container maxWidth="md">
+      <Typography variant="h4" gutterBottom>
+      Book Management
+      </Typography>
+      <Box display="flex" mt={2} gap={2}>
       <Button variant="contained" onClick={handleOpenBookList}>
         Show Book List
       </Button>
@@ -137,7 +142,9 @@ function BookPage() {
           <SearchByTitle />
         </DialogContent>
       </Dialog>
-    </div>
+      </Box>
+ 
+    </Container>
 
     
   );
