@@ -57,7 +57,7 @@ const CustomerList: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    axios.delete(`/api/customers/${id}`)
+    axios.delete(`${apiUrl}/customers/${id}`)
       .then(() => {
         alert("Customer deleted successfully");
         fetchCustomers();
@@ -72,7 +72,7 @@ const CustomerList: React.FC = () => {
   const handleUpdate = () => {
     if (editCustomer) {
       axios
-        .put(`/api/customers/update/${editCustomer._id}`, editCustomer)
+        .put(`${apiUrl}/customers/update/${editCustomer._id}`, editCustomer)
         .then(() => {
           alert("Customer updated successfully");
           fetchCustomers();

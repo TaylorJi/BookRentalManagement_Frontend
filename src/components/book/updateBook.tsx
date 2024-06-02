@@ -19,11 +19,14 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ book, onBookUpdated }) => {
   const [rentalDuration, setRentalDuration] = useState(book.rental_duration);
   const [isAvailable, setIsAvailable] = useState(book.is_available);
 
+  const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
+
+
   const handleUpdate = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Updating book with id:', book._id);
 
-    fetch(`/api/books/update/${book._id}`, {
+    fetch(`${apiUrl}/books/update/${book._id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

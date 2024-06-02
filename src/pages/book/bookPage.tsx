@@ -21,6 +21,9 @@ function BookPage() {
   const [showAddBookDialog, setShowAddBookDialog] = useState(false);
   const [showSearchByTitle, setShowSearchByTitle] = useState(false);
 
+  const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
+
+
   const handleBookAdded = () => {
     window.alert("Book added successfully");
     if (showBookList) {
@@ -59,7 +62,7 @@ function BookPage() {
 
   const fetchBooks = () => {
     axios
-      .get("/api/books")
+      .get(`${apiUrl}/books`)
       .then((response) => {
         setShowBookList(response.data);
         setShowBookList(true);

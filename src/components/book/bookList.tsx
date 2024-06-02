@@ -34,14 +34,16 @@ const BookList: React.FC = () => {
     fetchTypes();
   }, []);
 
+  const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
+
   const fetchBooks = () => {
-    axios.get("/api/books")
+    axios.get(`${apiUrl}/books`)
       .then(response => setBooks(response.data))
       .catch(error => setError(error.message));
   };
 
   const fetchTypes = () => {
-    axios.get("/api/types")
+    axios.get(`${apiUrl}/types`)
       .then(response => setTypeList(response.data))
       .catch(error => setError(error.message));
   };
@@ -66,7 +68,7 @@ const BookList: React.FC = () => {
 
   const handleUpdate = () => {
     if (editFormData) {
-      axios.put(`/api/books/update/${editBookId}`, editFormData)
+      axios.put(`${apiUrl}/books/update/${editBookId}`, editFormData)
         .then(() => {
           fetchBooks();
           setEditBookId(null);

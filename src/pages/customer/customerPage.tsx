@@ -12,6 +12,8 @@ function CustomerPage() {
     const [showCustomerList, setShowCustomerList] = useState(false);
     const [showCustomerListDialog, setShowCustomerListDialog] = useState(false);
     const [showAddCustomerDialog, setShowAddCustomerDialog] = useState(false);
+    const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
+
 
 
 
@@ -45,7 +47,7 @@ function CustomerPage() {
 
 
     const fetchCustomers = () => {
-        axios.get('/api/customers')
+        axios.get(`${apiUrl}/customers`)
         .then((response) => {
             setShowCustomerList(response.data);
             setShowCustomerList(true);

@@ -20,9 +20,11 @@ const AddBook: React.FC<AddBookProps> = ({ onBookAdded }) => {
   const [typeList, setTypeList] = useState<Type[]>([]);
   const [price, setPrice] = useState('');
   const [errors, setErrors] = useState<{ title: boolean, type: boolean, price: boolean }>({ title: false, type: false, price: false });
+  const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
+
 
   useEffect(() => {
-    fetch('/api/types')
+    fetch(`${apiUrl}/types`)
       .then(res => res.json())
       .then(data => {
         setTypeList(data);
@@ -42,7 +44,7 @@ const AddBook: React.FC<AddBookProps> = ({ onBookAdded }) => {
 
   const addBook = () => {
     if (validateForm()) {
-      fetch('/api/books/addBook', {
+      fetch(`${apiUrl}/books/addBook`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -8,6 +8,8 @@ interface AddTypeProps {
 
 const AddGenre: React.FC<AddTypeProps> = ({ onTypeAdded }) => {
   const [error, setError] = useState<string | null>(null);
+  const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
+
   const [formData, setFormData] = useState({
     name: "",
     fee: 0,
@@ -29,7 +31,7 @@ const AddGenre: React.FC<AddTypeProps> = ({ onTypeAdded }) => {
       if (!formData.name) {
         throw new Error("Name is required");
       }
-      const response = await axios.post("/api/types", formData);
+      const response = await axios.post(`${apiUrl}/types`, formData);
       alert("Type added successfully");
       console.log(response);
       onTypeAdded();

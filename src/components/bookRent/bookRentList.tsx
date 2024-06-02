@@ -31,11 +31,13 @@ interface Rental {
 const RentalList: React.FC = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
+
 
   
 
   const fetchRentals = () => {
-    fetch('/api/bookRents')
+    fetch(`${apiUrl}/bookRents`)
       .then((response) => response.json())
       .then((data) => setRentals(data))
       .catch((error) => setError(`Failed to fetch rentals: ${error.message}`));
@@ -44,6 +46,8 @@ const RentalList: React.FC = () => {
   useEffect(() => {
     fetchRentals();
   }, []);
+
+  
 
   if (error) return <div>Error: {error}</div>;
 

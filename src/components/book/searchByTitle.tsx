@@ -15,13 +15,15 @@ function SearchByTitle() {
     const [title, setTitle] = useState('');
     const [books, setBooks] = useState<Book[] | null>(null);
     const [error, setError] = useState('');
+    const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
+
 
     const handleSearch = async () => {
         setError('');
         setBooks(null);
 
         try {
-            const response = await axios.get(`/api/books/searchByTitle?title=${title}`);
+            const response = await axios.get(`${apiUrl}/books/searchByTitle?title=${title}`);
             setBooks(response.data.books);
             console.log('Books:', response.data.books);
         } catch (err) {

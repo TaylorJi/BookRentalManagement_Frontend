@@ -9,6 +9,9 @@ const TypePage: React.FC = () => {
   const [showTypeList, setShowTypeList] = useState(false);
   const [showAddType, setShowAddType] = useState(false);
 
+  const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
+
+
   // Toggle visibility of the type list
   const toggleTypeList = () => {
     setShowTypeList(!showTypeList);
@@ -28,7 +31,7 @@ const TypePage: React.FC = () => {
   // Fetch types from the backend
   const fetchTypes = () => {
     axios
-      .get("/api/types")
+      .get(`${apiUrl}/types`)
       .then((response) => {
         setTypes(response.data);
         setShowTypeList(true);
