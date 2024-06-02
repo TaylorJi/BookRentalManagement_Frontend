@@ -26,6 +26,7 @@ interface Customer {
   _id: string;
   name: string;
   contact: string;
+  email: string;
   address: string;
   note: string;
   late_fee: number;
@@ -105,6 +106,7 @@ const CustomerList: React.FC = () => {
             <TableCell>Id</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Contact</TableCell>
+            <TableCell>Email</TableCell>
             <TableCell>Address</TableCell>
             <TableCell>Note</TableCell>
             <TableCell>Late Fee</TableCell>
@@ -127,6 +129,18 @@ const CustomerList: React.FC = () => {
                   />
                 ) : (
                   customer.contact
+                )}
+              </TableCell>
+              <TableCell>
+                {editCustomer && editCustomer._id === customer._id ? (
+                  <TextField
+                    size="small"
+                    name="email"
+                    value={editCustomer.email}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  customer.email
                 )}
               </TableCell>
               <TableCell>
