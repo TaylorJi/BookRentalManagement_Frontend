@@ -37,14 +37,16 @@ const CustomerList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [editCustomer, setEditCustomer] = useState<Customer | null>(null);
   const [showRentedBooks, setShowRentedBooks] = useState<string | null>(null);
+  const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
 
   useEffect(() => {
     fetchCustomers();
   }, []);
 
   const fetchCustomers = () => {
+    console.log(apiUrl)
     axios
-      .get("/api/customers")
+      .get(`${apiUrl}/customers`)
       .then((response) => {
         setCustomers(response.data);
       })
