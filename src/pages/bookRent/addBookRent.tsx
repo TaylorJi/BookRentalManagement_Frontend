@@ -203,7 +203,7 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
       .filter(Boolean); // filter out null values
 
     try {
-      const response = await axios.post("/api/bookRents", {
+      const response = await axios.post(`${apiUrl}/bookRents`, {
         customer_ID: selectedCustomerId,
         books: booksToRent,
       });
