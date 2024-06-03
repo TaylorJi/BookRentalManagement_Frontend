@@ -20,6 +20,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
         contact: '',
         address: ''
     });
+    const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -55,7 +56,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (validateForm()) {
-            axios.post("/api/customers", formData)
+            axios.post(`${apiUrl}/customers/addCustomer`, formData)
                 .then(() => {
                     onCustomerAdded();
                     setFormData({
