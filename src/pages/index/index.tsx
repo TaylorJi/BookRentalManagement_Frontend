@@ -25,9 +25,6 @@ function IndexPage() {
         <Button variant="contained" color="primary" component={RouterLink} to="/returns" sx={{ m: 1 }}>
           Return
         </Button>
-        <Button variant="contained" color="primary" component={RouterLink} to="/transactions" sx={{ m: 1 }}>
-          Daily Transactions
-        </Button>
       </Box>
     </Box>
   );
