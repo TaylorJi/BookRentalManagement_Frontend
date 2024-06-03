@@ -6,6 +6,7 @@ interface Customer {
   _id: string;
   name: string;
   contact: string;
+  email: string;
   address: string;
   note: string;
   late_fee: number;
@@ -37,10 +38,14 @@ const RentalList: React.FC = () => {
   
 
   const fetchRentals = () => {
-    fetch(`${apiUrl}/bookRents`)
-      .then((response) => response.json())
-      .then((data) => setRentals(data))
-      .catch((error) => setError(`Failed to fetch rentals: ${error.message}`));
+    axios.get(`${apiUrl}/bookRents`)
+      .then(response => setRentals(response.data))
+      .catch(error => setError(`Failed to fetch rentals: ${error.message}`));
+      
+    // fetch(`${apiUrl}/bookRents`)
+    //   .then((response) => response.json())
+    //   .then((data) => setRentals(data))
+    //   .catch((error) => setError(`Failed to fetch rentals: ${error.message}`));
   };
 
   useEffect(() => {
