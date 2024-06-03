@@ -29,6 +29,16 @@ const TypeList: React.FC = () => {
     fetchTypes();
   }, []);
 
+  const deleteType = (id: string) => {
+    axios
+      .delete(`${apiUrl}/types/${id}`)
+      .then((response) => {
+        console.log("Delete response:", response.data);
+        setTypeList((prevTypeList) => prevTypeList.filter((type) => type._id !== id));
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
   return (
     <Container maxWidth="md">
       <Typography variant="h4" gutterBottom>
@@ -54,7 +64,7 @@ const TypeList: React.FC = () => {
                 <TableCell>{type.late_fee}</TableCell>
                 <TableCell>
                
-                  <Button variant="contained" color="secondary">
+                  <Button variant="contained" color="secondary" onClick={()=> deleteType(type._id)}>
                     Delete
                   </Button>
                 </TableCell>

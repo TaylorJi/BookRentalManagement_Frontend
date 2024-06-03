@@ -84,7 +84,7 @@ const BookList: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    axios.delete(`/api/books/${id}`)
+    axios.delete(`${apiUrl}/books/${id}`)
       .then(() => {
         fetchBooks();
       })
