@@ -119,7 +119,7 @@ const RentalList: React.FC = () => {
   const apiUrl = process.env.REACT_APP_HOSTED_BACKEND;
 
   const fetchRentals = () => {
-    axios.get(`${apiUrl}/api/bookRents`)
+    axios.get(`${apiUrl}/bookRents`)
       .then(response => setRentals(response.data))
       .catch(error => setError(`Failed to fetch rentals: ${error.message}`));
   };
