@@ -18,7 +18,7 @@ import BookPage from "./pages/book/bookPage";
 import TypePage from "./pages/type/typePage";
 import RentPage from "./pages/bookRent/bookRentpage";
 import IndexPage from "./pages/index";
-
+import Navigation from "./components/Navigation/navigation";
 import "./App.css";
 import ReturnPage from "./pages/return/returnPage";
 
@@ -26,34 +26,7 @@ function App() {
   return (
     <Router>
       <CssBaseline /> {/* Normalize the styles */}
-      <AppBar position="static">
-        <Toolbar>
-          <Typography
-            variant="h6"
-            component={RouterLink}
-            to="/"
-            sx={{ flexGrow: 1, color: "inherit", textDecoration: "none" }}
-          >
-            Book Rental System
-          </Typography>
-          <Button color="inherit" component={RouterLink} to="/customers">
-            Customers
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/books">
-            Books
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/types">
-            Types
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/rentals">
-            Rentals
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/returns">
-            Returns
-          </Button>
-          {/* Add more navigation buttons as needed */}
-        </Toolbar>
-      </AppBar>
+      <Navigation />
       {/* Define routes for your application */}
       <Routes>
         <Route path="/" element={<IndexPage />} />

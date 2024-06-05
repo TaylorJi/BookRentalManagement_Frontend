@@ -36,3 +36,35 @@
     transform: rotate(360deg);
   }
 }
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+  .App-header {
+    font-size: calc(8px + 2vmin);
+    padding: 20px;
+  }
+
+  .App-logo {
+    height: 30vmin;
+  }
+
+  .App-link {
+    font-size: calc(8px + 2vmin);
+  }
+}
+
+/* Desktop Monitor Styles */
+@media (min-width: 1024px) {
+  .App-header {
+    font-size: calc(12px + 2vmin);
+    padding: 40px;
+  }
+
+  .App-logo {
+    height: 50vmin;
+  }
+
+  .App-link {
+    font-size: calc(12px + 2vmin);
+  }
+}
