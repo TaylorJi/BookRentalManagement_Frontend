@@ -345,7 +345,7 @@ const BookRentalForm: React.FC<AddBookRentProps> = () => {
                               ))}
                             </Select>
                           </FormControl>
-                          <span style= {{ color: "red"}}>
+                          <span style= {{ color: "red", fontSize: "1.25 rem", fontWeight: "bold"}}>
                           - Fee: ${custom ? custom.fee.toFixed(2) : bookTypes[book.book_type]?.fee.toFixed(2)}
                           </span>
                         </>
